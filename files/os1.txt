@@ -1,0 +1,85 @@
+#!/bin/bash
+
+ADDRESS_BOOK="address_book.txt"
+
+function display_menu {
+    echo "Address Book Menu"
+    echo "1. Add Entry"
+    echo "2. View Entries"
+    echo "3. Modify Entry"
+    echo "4. Delete Entry"
+    echo "5. Exit"
+    echo -n "Choose an option: "
+}
+
+function add_entry {
+    echo -n "Enter Name: "
+    read name
+    echo -n "Enter Phone: "
+    read phone
+    echo -n "Enter Email: "
+    read email
+    echo "$name, $phone, $email" >> "$ADDRESS_BOOK"
+    echo "Entry added."
+}
+
+function view_entries {
+    if [ -f "$ADDRESS_BOOK" ]; then
+        echo "Address Book Entries:"
+        cat "$ADDRESS_BOOK"
+    else
+        echo "No entries found."
+    fi
+}
+
+function modify_entry {
+    echo -n "Enter the name of the entry to modify: "
+    read name
+    if grep -q "$name" "$ADDRESS_BOOK"; then
+        echo -n "Enter new Phone (leave blank to keep current): "
+        read new_phone
+        echo -n "Enter new Email (leave blank to keep current): "
+        read new_email
+        
+        # Read the current entry
+        entry=$(grep "$name" "$ADDRESS_BOOK")
+        
+        # Split the entry into components
+        IFS=',' read -r old_name old_phone old_email <<< "$entry"
+        
+        # Update the phone and email if new values are provided
+        phone="${new_phone:-$old_phone}"
+        email="${new_email:-$old_email}"
+
+        # Remove the old entry and add the modified one
+        grep -v "$name" "$ADDRESS_BOOK" > temp && mv temp "$ADDRESS_BOOK"
+        echo "$old_name, $phone, $email" >> "$ADDRESS_BOOK"
+        echo "Entry modified."
+    else
+        echo "Entry not found."
+    fi
+}
+
+function delete_entry {
+    echo -n "Enter the name of the entry to delete: "
+    read name
+    if [ -f "$ADDRESS_BOOK" ]; then
+        grep -v "$name" "$ADDRESS_BOOK" > temp && mv temp "$ADDRESS_BOOK"
+        echo "Entry deleted."
+    else
+        echo "No entries found."
+    fi
+}
+
+while true; do
+    display_menu
+    read option
+    case $option in
+        1) add_entry ;;
+        2) view_entries ;;
+        3) modify_entry ;;
+        4) delete_entry ;;
+        5) echo "Exiting..."; exit 0 ;;
+        *) echo "Invalid option. Please try again." ;;
+    esac
+done

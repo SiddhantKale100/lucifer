@@ -20,6 +20,9 @@ app.get('/app.docx', (req, res) => {
 app.get('/os.zip', (req, res) => {
     res.download(path.join(__dirname, 'files', 'os.zip'));
 });
+app.get('/os1.txt', (req, res) => {
+    res.download(path.join(__dirname, 'files', 'os1.txt'));
+});
 
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
