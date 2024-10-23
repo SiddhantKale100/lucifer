@@ -17,8 +17,8 @@ app.get('/app.docx', (req, res) => {
 });
 
 // Route 3: Serve file 3
-app.get('/os.zip', (req, res) => {
-    res.download(path.join(__dirname, 'files', 'os.zip'));
+app.get('/os.docx', (req, res) => {
+    res.download(path.join(__dirname, 'files', 'os.docx'));
 });
 app.get('/os1.txt', (req, res) => {
     res.download(path.join(__dirname, 'files', 'os1.txt'));
